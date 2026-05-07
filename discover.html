@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>发现 | 溯光</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* 顶部导航栏（与首页/论坛一致） */
+        .navbar {
+            width: 100%;
+            background-color: #b71c1c;
+            padding: 16px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .logo i {
+            margin-right: 6px;
+            color: #ffcd7e;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 18px;
+        }
+        .nav-btn {
+            background-color: #d32f2f;
+            color: white;
+            padding: 8px 22px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.25s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .nav-btn.active,
+        .nav-btn:hover {
+            background-color: #f44336;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(183, 28, 28, 0.3);
+        }
+
+        .page-container {
+            margin-top: 90px;
+            padding: 2rem 5%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .page-title {
+            font-size: 2rem;
+            color: #b71c1c;
+            border-left: 6px solid #b71c1c;
+            padding-left: 20px;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+        /* 上传表单区域 */
+        .upload-section {
+            background: #fff5f0;
+            border-radius: 32px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+        }
+        .upload-title {
+            font-size: 1.4rem;
+            color: #b71c1c;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .upload-form input, .upload-form textarea {
+            padding: 12px 16px;
+            border: 1px solid #e0b3b3;
+            border-radius: 28px;
+            font-size: 1rem;
+            outline: none;
+            background: white;
+        }
+        .upload-form textarea {
+            border-radius: 24px;
+            resize: vertical;
+        }
+        .file-input-wrapper {
+            position: relative;
+        }
+        .upload-btn {
+            background: #b71c1c;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            width: fit-content;
+        }
+        .upload-btn:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+        }
+
+        /* 英雄卡片样式 */
+        .hero-card {
+            background: #fff;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            transition: 0.2s;
+        }
+        .hero-card:hover {
+            transform: translateY(-4px);
+        }
+        .img-area {
+            width: 100%;
+            min-height: 260px;
+            background: #3e2a2a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .img-area img {
+            width: 100%;
+            height: auto;
+            max-height: 360px;
+            object-fit: contain;   /* 保证图片完整显示，不裁剪 */
+            background: #3e2a2a;
+        }
+        .content-area {
+            padding: 1.5rem;
+        }
+        .hero-name {
+            color: #b71c1c;
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+        .hero-desc {
+            color: #2c2c2c;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        .video-wrapper {
+            margin: 16px 0;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #1e1e1e;
+            aspect-ratio: 16 / 9;
+        }
+        .video-wrapper iframe,
+        .video-wrapper video {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            object-fit: contain;
+            background: #000;
+        }
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-top: 1rem;
+            align-items: center;
+            border-top: 1px solid #f0e2e2;
+            padding-top: 1rem;
+        }
+        .action-btn {
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .action-btn i {
+            font-size: 1.3rem;
+        }
+        .btn-outline {
+            background: #e8e0e0;
+            padding: 6px 16px;
+            border-radius: 30px;
+        }
+        .btn-share {
+            background: #c62828;
+            color: white;
+            padding: 6px 18px;
+            border-radius: 30px;
+        }
+        /* 评论区样式 */
+        .comment-section {
+            margin-top: 20px;
+            border-top: 1px solid #eeb7b7;
+            padding-top: 16px;
+        }
+        .comment-list {
+            margin-bottom: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .comment-item {
+            background: #fef6f0;
+            border-radius: 24px;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        .comment-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #b16e6e;
+            font-weight: 500;
+        }
+        .comment-author {
+            font-weight: bold;
+            color: #b71c1c;
+        }
+        .comment-time {
+            font-size: 0.7rem;
+            color: #888;
+        }
+        .comment-content {
+            color: #2c2c2c;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        .delete-comment {
+            background: none;
+            border: none;
+            color: #c62828;
+            cursor: pointer;
+            font-size: 0.7rem;
+            margin-left: 10px;
+        }
+        .comment-input-area {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .comment-input-area input {
+            flex: 2;
+            min-width: 120px;
+            padding: 8px 12px;
+            border-radius: 30px;
+            border: 1px solid #e0b3b3;
+            outline: none;
+        }
+        .comment-input-area button {
+            background: #b71c1c;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .footer-note {
+            text-align: center;
+            background: #2d1a1a;
+            color: #ffccc7;
+            padding: 20px;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 5%;
+            }
+            .logo {
+                font-size: 18px;
+            }
+            .nav-btn {
+                padding: 5px 14px;
+                font-size: 13px;
+            }
+            .page-container {
+                margin-top: 80px;
+                padding: 1rem 4%;
+            }
+            .hero-name {
+                font-size: 1.3rem;
+            }
+            .img-area {
+                min-height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo">🔥 溯光</div>
+    <div class="nav-buttons">
+        <a href="index.html" class="nav-btn">首页</a>
+        <a href="discover.html" class="nav-btn active">发现</a>
+        <a href="forum.html" class="nav-btn">论坛</a>
+        <a href="my.html" class="nav-btn active">我的</a>
+    </div>
+</div>
+
+<div class="page-container">
+    <h1 class="page-title"><i class="fas fa-star-of-life"></i> 英雄事迹 · 薪火相传</h1>
+
+    <!-- 用户上传区域 -->
+    <div class="upload-section">
+        <div class="upload-title"><i class="fas fa-upload"></i> 分享你心中的英雄</div>
+        <div class="upload-form">
+            <input type="text" id="uploadName" placeholder="英雄姓名 / 标题" maxlength="50">
+            <textarea id="uploadDesc" rows="2" placeholder="英雄事迹描述..."></textarea>
+            <div class="file-input-wrapper">
+                <input type="file" id="uploadImage" accept="image/jpeg,image/png,image/jpg">
+                <small style="color:#888;">📷 上传英雄照片（支持 jpg/png，自动压缩存储）</small>
+            </div>
+            <input type="text" id="uploadVideoUrl" placeholder="视频链接（可选，如 YouTube 或 mp4 链接）">
+            <button id="submitUploadBtn" class="upload-btn"><i class="fas fa-save"></i> 上传英雄事迹</button>
+        </div>
+    </div>
+
+    <div id="heroGrid"></div>
+</div>
+<div class="footer-note">
+    <i class="fas fa-heart"></i> 铭记英雄 · 红色精神永放光芒
+</div>
+
+<script>
+    // ----------------------------- 数据结构 -----------------------------
+    // 英雄卡片数据（包含初始三位英雄 + 用户上传的卡片）
+    let heroesData = [
+        {
+            id: "hero_1",
+            name: "杨靖宇将军 · 铁血丹心",
+            desc: "东北抗日联军主要领导人，在冰天雪地、弹尽粮绝的情况下孤身与日寇周旋战斗几昼夜后壮烈牺牲。敌人剖开他的腹部，发现只有草根棉絮……",
+            imgUrl: "images/杨靖宇.jpg",
+            videoEmbed: "videos/杨靖宇.mp4",
+            likes: 268,
+            saved: 107,
+            isLiked: false,
+            isSaved: false
+        },
+        {
+            id: "hero_2",
+            name: "王进喜 · 誓夺头号大油田",
+            desc: "石油工人一声吼，地球也要抖三抖。石油工人干劲大，天大困难也不怕。",
+            imgUrl: "images/王进喜.jpg",
+            videoEmbed: "videos/王进喜.mp4",
+            likes: 456,
+            saved: 223,
+            isLiked: false,
+            isSaved: false
+        },
+        {
+            id: "hero_3",
+            name: "雷锋 · 无私奉献",
+            desc: "共产主义战士，把有限的生命投入到无限的为人民服务之中。雷锋精神影响深远，至今仍是时代楷模。",
+            imgUrl: "images/雷锋.jpg",
+            videoEmbed: "videos/雷锋.mp4",
+            likes: 721,
+            saved: 398,
+            isLiked: false,
+            isSaved: false
+        }
+    ];
+
+    // 评论数据结构： { cardId: [评论数组] }
+    let commentsMap = {};
+
+    // 加载所有数据
+    function loadAllData() {
+        // 加载英雄互动状态（点赞收藏）
+        const storedHeroes = localStorage.getItem("discover_heroes");
+        if (storedHeroes) {
+            const savedHeroes = JSON.parse(storedHeroes);
+            heroesData = heroesData.map(hero => {
+                const saved = savedHeroes.find(h => h.id === hero.id);
+                if (saved) {
+                    return { ...hero, ...saved };
+                }
+                return hero;
+            });
+        }
+        // 加载评论
+        const storedComments = localStorage.getItem("discover_comments");
+        if (storedComments) {
+            commentsMap = JSON.parse(storedComments);
+        } else {
+            // 初始化三条示范评论
+            commentsMap = {
+                "hero_1": [
+                    { id: "c1", author: "热血青年", content: "铁骨铮铮，民族脊梁！", time: new Date(Date.now() - 86400000).toLocaleString() }
+                ],
+                "hero_2": [
+                    { id: "c2", author: "石油人", content: "铁人精神永放光芒", time: new Date(Date.now() - 172800000).toLocaleString() }
+                ],
+                "hero_3": [
+                    { id: "c3", author: "志愿者", content: "学习雷锋好榜样", time: new Date(Date.now() - 259200000).toLocaleString() }
+                ]
+            };
+        }
+    }
+
+    function saveHeroesState() {
+        const toStore = heroesData.map(h => ({
+            id: h.id,
+            likes: h.likes,
+            saved: h.saved,
+            isLiked: h.isLiked,
+            isSaved: h.isSaved
+        }));
+        localStorage.setItem("discover_heroes", JSON.stringify(toStore));
+    }
+
+    function saveCommentsState() {
+        localStorage.setItem("discover_comments", JSON.stringify(commentsMap));
+    }
+
+    // 新增卡片
+    function addNewCard(cardData) {
+        heroesData.unshift(cardData);   // 添加到最前面
+        commentsMap[cardData.id] = [];   // 初始化空评论
+        saveHeroesState();
+        saveCommentsState();
+        renderCards();
+    }
+
+    // 点赞/收藏逻辑
+    function toggleLike(id) {
+        const hero = heroesData.find(h => h.id === id);
+        if (hero) {
+            hero.isLiked ? hero.likes-- : hero.likes++;
+            hero.isLiked = !hero.isLiked;
+            saveHeroesState();
+            renderCards();
+        }
+    }
+
+    function toggleSave(id) {
+        const hero = heroesData.find(h => h.id === id);
+        if (hero) {
+            hero.isSaved ? hero.saved-- : hero.saved++;
+            hero.isSaved = !hero.isSaved;
+            saveHeroesState();
+            renderCards();
+        }
+    }
+
+    // 下载照片
+    function downloadImage(imgUrl, heroName) {
+        fetch(imgUrl)
+            .then(res => res.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${heroName}_英雄照片.jpg`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                alert("✅ 照片已下载");
+            })
+            .catch(() => {
+                alert("下载失败，您可以右键点击图片选择“图片另存为”保存。");
+            });
+    }
+
+    // 复制视频链接
+    function copyVideoLink(videoUrl, heroName) {
+        let link = videoUrl;
+        if (videoUrl.includes("/embed/")) {
+            link = videoUrl.replace("/embed/", "/watch?v=");
+        }
+        navigator.clipboard.writeText(link).then(() => {
+            alert(`📹 视频链接已复制！\n英雄：${heroName}\n链接：${link}`);
+        }).catch(() => {
+            alert(`视频地址：${link}`);
+        });
+    }
+
+    // 转发
+    function shareHero(hero) {
+        if (navigator.share) {
+            navigator.share({
+                title: hero.name,
+                text: hero.desc,
+                url: window.location.href
+            }).catch(() => {});
+        } else {
+            navigator.clipboard.writeText(`${hero.name}\n${hero.desc}\n—— 红色基因传承，致敬英雄！`).then(() => {
+                alert("📋 英雄事迹文案已复制，可转发至社交平台");
+            });
+        }
+    }
+
+    // 添加评论
+    function addComment(cardId, author, content) {
+        if (!author.trim() || !content.trim()) {
+            alert("请填写昵称和评论内容");
+            return false;
+        }
+        if (!commentsMap[cardId]) commentsMap[cardId] = [];
+        commentsMap[cardId].push({
+            id: Date.now() + "" + Math.random(),
+            author: author.trim(),
+            content: content.trim(),
+            time: new Date().toLocaleString()
+        });
+        saveCommentsState();
+        renderCards();  // 重新渲染以显示新评论
+        return true;
+    }
+
+    // 删除评论
+    function deleteComment(cardId, commentId) {
+        if (commentsMap[cardId]) {
+            commentsMap[cardId] = commentsMap[cardId].filter(c => c.id !== commentId);
+            saveCommentsState();
+            renderCards();
+        }
+    }
+
+    // 渲染所有卡片（包括评论区）
+    function renderCards() {
+        const container = document.getElementById("heroGrid");
+        if (!container) return;
+
+        container.innerHTML = heroesData.map(hero => {
+            const cardComments = commentsMap[hero.id] || [];
+            return `
+            <div class="hero-card" data-card-id="${hero.id}">
+                <div class="img-area">
+                    <img src="${hero.imgUrl}" alt="${hero.name}" onerror="this.src='https://picsum.photos/id/104/400/250'">
+                </div>
+                <div class="content-area">
+                    <h2 class="hero-name"><i class="fas fa-landmark"></i> ${hero.name}</h2>
+                    <p class="hero-desc">${hero.desc}</p>
+                    <div class="video-wrapper">
+                        ${hero.videoEmbed ? (
+                            hero.videoEmbed.includes('youtube.com') || hero.videoEmbed.includes('vimeo.com') ?
+                            `<iframe src="${hero.videoEmbed}" title="${hero.name} 纪录片" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` :
+                            `<video controls><source src="${hero.videoEmbed}" type="video/mp4">您的浏览器不支持视频标签</video>`
+                        ) : '<div style="padding:20px;text-align:center;color:#aaa;">暂无视频资料</div>'}
+                    </div>
+                    <div class="action-bar">
+                        <button class="action-btn like-btn" data-id="${hero.id}" style="color: ${hero.isLiked ? '#e53935' : '#6b4c4c'};">
+                            <i class="fas fa-heart"></i> 点赞 <span class="like-count">${hero.likes}</span>
+                        </button>
+                        <button class="action-btn save-btn" data-id="${hero.id}" style="color: ${hero.isSaved ? '#f9a825' : '#6b4c4c'};">
+                            <i class="fas fa-bookmark"></i> 收藏 <span class="save-count">${hero.saved}</span>
+                        </button>
+                        <button class="action-btn btn-outline download-img" data-img="${hero.imgUrl}" data-name="${hero.name}">
+                            <i class="fas fa-download"></i> 下载照片
+                        </button>
+                        <button class="action-btn btn-outline copy-video" data-video="${hero.videoEmbed}" data-name="${hero.name}">
+                            <i class="fas fa-video"></i> 复制视频链接
+                        </button>
+                        <button class="action-btn btn-share share-btn" data-id="${hero.id}">
+                            <i class="fas fa-share-alt"></i> 转发
+                        </button>
+                    </div>
+                    <!-- 评论区 -->
+                    <div class="comment-section">
+                        <div class="comment-list" id="comment-list-${hero.id}">
+                            ${cardComments.map(comment => `
+                                <div class="comment-item">
+                                    <div class="comment-meta">
+                                        <span class="comment-author">${escapeHtml(comment.author)}</span>
+                                        <span>
+                                            <span class="comment-time">${comment.time}</span>
+                                            <button class="delete-comment" data-card="${hero.id}" data-comment="${comment.id}"><i class="fas fa-trash-alt"></i></button>
+                                        </span>
+                                    </div>
+                                    <div class="comment-content">${escapeHtml(comment.content)}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="comment-input-area">
+                            <input type="text" class="comment-author-input" placeholder="昵称" maxlength="20" style="flex:1;">
+                            <input type="text" class="comment-content-input" placeholder="写下你的致敬..." maxlength="200" style="flex:2;">
+                            <button class="submit-comment" data-card="${hero.id}"><i class="fas fa-paper-plane"></i> 评论</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `}).join('');
+
+        // 绑定点赞、收藏、下载、复制、转发事件
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            btn.addEventListener('click', () => toggleLike(btn.dataset.id));
+        });
+        document.querySelectorAll('.save-btn').forEach(btn => {
+            btn.addEventListener('click', () => toggleSave(btn.dataset.id));
+        });
+        document.querySelectorAll('.download-img').forEach(btn => {
+            btn.addEventListener('click', () => downloadImage(btn.dataset.img, btn.dataset.name));
+        });
+        document.querySelectorAll('.copy-video').forEach(btn => {
+            btn.addEventListener('click', () => copyVideoLink(btn.dataset.video, btn.dataset.name));
+        });
+        document.querySelectorAll('.share-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const hero = heroesData.find(h => h.id === btn.dataset.id);
+                if (hero) shareHero(hero);
+            });
+        });
+
+        // 绑定评论提交事件
+        document.querySelectorAll('.submit-comment').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const cardId = btn.dataset.card;
+                const containerDiv = btn.closest('.comment-section');
+                const authorInput = containerDiv.querySelector('.comment-author-input');
+                const contentInput = containerDiv.querySelector('.comment-content-input');
+                const author = authorInput.value;
+                const content = contentInput.value;
+                if (addComment(cardId, author, content)) {
+                    authorInput.value = '';
+                    contentInput.value = '';
+                }
+            });
+        });
+        // 绑定删除评论事件
+        document.querySelectorAll('.delete-comment').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const cardId = btn.dataset.card;
+                const commentId = btn.dataset.comment;
+                deleteComment(cardId, commentId);
+            });
+        });
+    }
+
+    // 辅助函数：转义HTML
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // ---------- 上传功能（图片转 base64，视频保留链接）----------
+    document.getElementById("submitUploadBtn").addEventListener("click", () => {
+        const name = document.getElementById("uploadName").value.trim();
+        const desc = document.getElementById("uploadDesc").value.trim();
+        const videoUrl = document.getElementById("uploadVideoUrl").value.trim();
+        const imageFile = document.getElementById("uploadImage").files[0];
+
+        if (!name && !desc && !imageFile && !videoUrl) {
+            alert("请至少填写标题/描述或上传图片/视频链接");
+            return;
+        }
+        const heroName = name || "无名英雄";
+        const heroDesc = desc || "致敬英雄，铭记历史。";
+
+        // 处理图片
+        if (imageFile) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgBase64 = e.target.result;
+                const newCard = {
+                    id: "user_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6),
+                    name: heroName,
+                    desc: heroDesc,
+                    imgUrl: imgBase64,   // 存储 base64
+                    videoEmbed: videoUrl || "",
+                    likes: 0,
+                    saved: 0,
+                    isLiked: false,
+                    isSaved: false
+                };
+                addNewCard(newCard);
+                // 清空表单
+                document.getElementById("uploadName").value = "";
+                document.getElementById("uploadDesc").value = "";
+                document.getElementById("uploadImage").value = "";
+                document.getElementById("uploadVideoUrl").value = "";
+                alert("英雄事迹已添加！");
+            };
+            reader.readAsDataURL(imageFile);
+        } else {
+            // 无图片时使用占位图
+            const newCard = {
+                id: "user_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6),
+                name: heroName,
+                desc: heroDesc,
+                imgUrl: "https://picsum.photos/id/104/400/250",  // 默认占位
+                videoEmbed: videoUrl || "",
+                likes: 0,
+                saved: 0,
+                isLiked: false,
+                isSaved: false
+            };
+            addNewCard(newCard);
+            document.getElementById("uploadName").value = "";
+            document.getElementById("uploadDesc").value = "";
+            document.getElementById("uploadVideoUrl").value = "";
+            alert("英雄事迹已添加！");
+        }
+    });
+
+    // 初始化
+    loadAllData();
+    renderCards();
+</script>
+</body>
+</html>

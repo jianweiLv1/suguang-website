@@ -1,0 +1,141 @@
+// ======================================
+// 1. 首页轮播图
+// ======================================
+const slider = document.querySelector('.slider-wrapper');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+let index = 0;
+
+function slide() {
+    slider.style.transform = `translateX(-${index * 100}%)`;
+}
+if (prevBtn && nextBtn) {
+    prevBtn.addEventListener('click', () => {
+        index = (index - 1 + 3) % 3;
+        slide();
+    });
+    nextBtn.addEventListener('click', () => {
+        index = (index + 1) % 3;
+        slide();
+    });
+    setInterval(() => {
+        index = (index + 1) % 3;
+        slide();
+    }, 4000);
+}
+
+// ======================================
+// 2. 点赞功能
+// ======================================
+document.querySelectorAll('.like-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const icon = this.querySelector('i');
+        const num = this.querySelector('span');
+        icon.classList.toggle('far');
+        icon.classList.toggle('fas');
+        this.classList.toggle('active');
+        num.innerText = parseInt(num.innerText) + (icon.classList.contains('fas') ? 1 : -1);
+    });
+});
+
+// ======================================
+// 3. 收藏功能
+// ======================================
+document.querySelectorAll('.collect-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const icon = this.querySelector('i');
+        icon.classList.toggle('far');
+        icon.classList.toggle('fas');
+        this.classList.toggle('active');
+        alert('收藏成功！');
+    });
+});
+
+// ======================================
+// 4. 下载功能
+// ======================================
+document.querySelectorAll('.download-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        alert('开始下载文件...');
+    });
+});
+
+// ======================================
+// 5. 转发功能
+// ======================================
+document.querySelectorAll('.share-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        alert('链接已复制，可转发分享！');
+    });
+});
+
+// ======================================
+// 6. 复制文案
+// ======================================
+document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const text = this.closest('.content-card').querySelector('p').innerText;
+        navigator.clipboard.writeText(text);
+        alert('文案已复制！');
+    });
+});
+
+// ======================================
+// 7. 评论发布（所有视频/照片/文案）
+// ======================================
+document.querySelectorAll('.comment-submit').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const input = this.previousElementSibling;
+        const list = this.nextElementSibling;
+        const val = input.value.trim();
+        if (!val) {
+            alert('请输入评论内容');
+            return;
+        }
+        const item = document.createElement('div');
+        item.className = 'p-1 border-b border-gray-100';
+        item.innerHTML = `<span class="font-bold">我：</span>${val}`;
+        list.prepend(item);
+        input.value = '';
+    });
+});
+
+// ======================================
+// 8. 论坛敏感词屏蔽 + 发帖功能
+// ======================================
+const badWords = ['反动', '侮辱', '攻击', '抹黑', '汉奸', '卖国', '违法', '暴力', '色情'];
+const postBtn = document.getElementById('postBtn');
+if (postBtn) {
+    postBtn.addEventListener('click', function () {
+        const title = document.getElementById('postTitle').value.trim();
+        const content = document.getElementById('postContent').value.trim();
+        if (!title || !content) {
+            alert('请填写完整内容');
+            return;
+        }
+        // 敏感词检测
+        for (let w of badWords) {
+            if (content.includes(w) || title.includes(w)) {
+                alert('您的内容包含违规信息，禁止发布！');
+                return;
+            }
+        }
+        const date = new Date().toLocaleDateString();
+        const html = `
+        <div class="post-card">
+            <div class="flex justify-between">
+                <h3 class="font-bold text-lg">${title}</h3>
+                <span class="text-sm text-gray-500">${date}</span>
+            </div>
+            <p class="my-2 text-gray-700">${content}</p>
+            <div class="text-sm">
+                <button class="like-btn text-gray-600 mr-4"><i class="far fa-heart"></i> <span>0</span></button>
+                <button class="reply-btn text-red-main"><i class="fas fa-reply"></i> 回复</button>
+            </div>
+        </div>`;
+        document.getElementById('postList').insertAdjacentHTML('afterbegin', html);
+        document.getElementById('postTitle').value = '';
+        document.getElementById('postContent').value = '';
+        alert('发布成功！');
+    });
+}

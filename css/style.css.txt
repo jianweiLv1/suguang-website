@@ -1,0 +1,141 @@
+/* 红色主题变量 */
+:root {
+    --red-main: #C91F24;
+    --red-dark: #8B0000;
+    --gold: #FFD700;
+}
+
+/* 导航栏 */
+.red-navbar {
+    background: var(--red-main);
+    color: white;
+}
+.red-navbar a {
+    transition: 0.3s;
+}
+.nav-active {
+    color: var(--gold) !important;
+    font-weight: bold;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 4px;
+}
+
+/* 轮播图 */
+.slider-container {
+    position: relative;
+}
+.slider-wrapper {
+    display: flex;
+    height: 100%;
+}
+.slider-item {
+    min-width: 100%;
+}
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.4);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    transition: 0.3s;
+}
+.slider-btn:hover {
+    background: var(--red-main);
+}
+.slider-btn.left-0 { left: 20px; }
+.slider-btn.right-0 { right: 20px; }
+.text-shadow {
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+}
+
+/* 卡片 */
+.card-item {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+.card-item:hover {
+    transform: translateY(-5px);
+}
+.card-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(201, 31, 36, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    color: var(--red-main);
+    font-size: 24px;
+}
+.section-title {
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+    color: var(--red-main);
+    margin-bottom: 32px;
+}
+
+/* 内容卡片 */
+.content-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+.content-card:hover {
+    transform: scale(1.02);
+}
+
+/* 按钮交互 */
+.like-btn.active i {
+    color: var(--red-main);
+    font-weight: bold;
+}
+.collect-btn.active i {
+    color: var(--gold);
+}
+.action-btn {
+    cursor: pointer;
+    transition: 0.2s;
+}
+.action-btn:hover {
+    color: var(--red-main);
+}
+
+/* 评论 */
+.comment-input:focus {
+    outline: none;
+    border-color: var(--red-main);
+}
+.comment-submit {
+    transition: 0.3s;
+}
+.comment-submit:hover {
+    background: var(--red-dark) !important;
+}
+
+/* 帖子 */
+.post-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* 底部 */
+.red-footer {
+    background: var(--red-dark);
+}
